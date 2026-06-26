@@ -1,0 +1,26 @@
+name: Deploy Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Stop Existing Containers
+        run: docker compose down
+
+      - name: Build Docker Images
+        run: docker compose build
+
+      - name: Start Containers
+        run: docker compose up -d
+
+      - name: Cleanup Unused Images
+        run: docker image prune -f
